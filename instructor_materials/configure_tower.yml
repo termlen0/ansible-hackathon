@@ -1,0 +1,88 @@
+---
+- name: Create the orgs and users
+  hosts: all
+  gather_facts: no
+  vars:
+    orgs:
+      - secops
+      - webadmin
+      - opsadmin
+    tenancies:
+      - users:
+          - webadmin1
+          - webadmin2
+          - webadmin3
+          - webadmin4
+          - webadmin5
+        org: webadmin
+        passwd: "{{ webops_pass | default('webadmin123') }}"
+      - users:
+          - secops1
+          - secops2
+          - secops3
+          - secops4
+          - secops5
+        org: secops
+        passwd: "{{ secops_pass | default('secops123') }}"
+      - users:
+          - opsadmin1
+          - opsadmin2
+          - opsadmin3
+          - opsadmin4
+          - opsadmin5
+        org: opsadmin
+        passwd: "{{ ops_pass | default('opsadmin123') }}"
+
+  tasks:
+    - debug:
+        msg: "{{ item }}"
+        verbosity: 1
+      loop: "{{ orgs }}"
+      delegate_to: localhost
+
+    - name: Create the orgs on all the towers
+      ansible.tower.tower_organization:
+        name: "{{ item.0.org }}"
+        description: "{{ item.0.org }} Org"
+        state: present
+        tower_username: "{{ tower_username }}" # pass using inventory
+        tower_password: "{{ tower_password }}" # pass using inventory
+        validate_certs: no
+        tower_host: "{{tower_host }}"
+      delegate_to: localhost
+      loop: "{{ tenancies | subelements('users') }}"
+      register: result
+      until: result is not failed
+      retries: 5
+
+    - name: Create the users on all towers
+      ansible.tower.tower_user:
+        username: "{{ item.1 }}"
+        password: "{{ item.0.passwd }}"
+        state: present
+        email: "{{ item.1 }}@hackathon.com"
+        tower_username: "{{ tower_username }}" # pass using inventory
+        tower_password: "{{ tower_password }}" # pass using inventory
+        validate_certs: no
+        tower_host: "{{tower_host }}"
+      delegate_to: localhost
+      loop: "{{ tenancies | subelements('users') }}"
+      register: result
+      until: result is not failed
+      retries: 5
+
+    - name: Assign users to the orgs
+      ansible.tower.tower_role:
+        organization: "{{ item.0.org }}"
+        user: "{{ item.1 }}"
+        state: present
+        role: admin
+        tower_username: "{{ tower_username }}" # pass using inventory
+        tower_password: "{{ tower_password }}" # pass using inventory
+        validate_certs: no
+        tower_host: "{{tower_host }}"
+      delegate_to: localhost
+      loop: "{{ tenancies | subelements('users') }}"
+      register: result
+      until: result is not failed
+      retries: 5

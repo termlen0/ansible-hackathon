@@ -1,0 +1,7 @@
+/AdminOps/
+/SecOps/
+/WebOps/
+/instructor_instructions/collections/*
+!/instructor
+/instructor_materials/*.cfg
+/instructor_materials/*.yml

@@ -1,0 +1,8 @@
+{% for student in range(1, student_count|int + 1) %}
+student{{student}}  tower_host=student{{student}}.{{tower_domain}}
+{% endfor %}
+
+
+[all:vars]
+tower_username=admin
+tower_password={{workshop_passwd}}

@@ -1,0 +1,19 @@
+---
+- name: Build the instructor inventory
+  hosts: localhost
+  gather_facts: no
+  vars_prompt:
+    - name: tower_domain
+      prompt: "Enter the Workshop domain name"
+      private: no
+    - name: student_count
+      prompt: "Enter the number of attendees"
+      private: no
+    - name: workshop_passwd
+      prompt: "Enter the workshop password for tower admin"
+      private: no
+  tasks:
+    - name: Generate the instructor-invventory
+      template:
+        src: inst-inv.j2
+        dest: "{{ playbook_dir }}/instructor-inventory"
