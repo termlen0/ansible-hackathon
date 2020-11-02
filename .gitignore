@@ -1,7 +1,7 @@
 /AdminOps/
 /SecOps/
 /WebOps/
-/instructor_instructions/collections/*
-!/instructor
-/instructor_materials/*.cfg
-/instructor_materials/*.yml
+/instructor_materials/collections/*
+!/instructor_materials/collections/requirements.yml
+/instructor_materials/REinstructor-inventory
+/instructor_materials/instructor-inventory

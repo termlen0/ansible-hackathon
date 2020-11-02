@@ -4,9 +4,10 @@
 Three teams with different operational goals but with the same
 business goal, have to build and make available a loadbalanced web
 application.
-[ ] Security Operations
-[ ] System Administration Operations
-[ ] Web operations
+
+- Security Operations
+- System Administration Operations
+-  Web operations
 
 ## Playbook Tasks:
 ### All teams:
@@ -15,6 +16,9 @@ application.
         - SecOps
         - Ops
         - WebOps
+
+> Since each team will be fairly independent, feel free to build out your inventory to best suit your use cases
+
 ### Security Ops:
 Build distinct playbooks to accomplish each of the following tasks:
 Note: None of these tasks should modify the configurations. It should
